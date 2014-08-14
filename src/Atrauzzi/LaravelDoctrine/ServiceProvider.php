@@ -44,7 +44,7 @@ class ServiceProvider extends Base {
 			$connection = $config->get('laravel-doctrine::doctrine.connection');
 			$devMode = $config->get('app.debug');
 
-			$cache = null; // Default, let Doctrine decide.
+			$cache = new ArrayCache();             
 
 			if(!$devMode) {
 
@@ -93,16 +93,18 @@ class ServiceProvider extends Base {
 
 			}
 
-			$doctrine_config = Setup::createAnnotationMetadataConfiguration(
-				$config->get('laravel-doctrine::doctrine.metadata'),
-				$devMode,
-				$config->get('laravel-doctrine::doctrine.proxy_classes.directory'),
-				$cache
-			);
+			$doctrine_config = new Configuration();            
+            $doctrine_config->setMetadataCacheImpl($cache);
+            AnnotationRegistry::registerFile(app_path() . '/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
+            $driver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+                new \Doctrine\Common\Annotations\AnnotationReader(),
+                array($config->get('laravel-doctrine::doctrine.metadata'))
+            );
+            $doctrine_config->setMetadataDriverImpl($driver);
 
-			$doctrine_config->setAutoGenerateProxyClasses(
-				$config->get('laravel-doctrine::doctrine.proxy_classes.auto_generate')
-			);
+            $doctrine_config->setProxyDir($config->get('laravel-doctrine::doctrine.proxy_classes.directory'));
+            
+            $doctrine_config->setProxyNamespace($config->get('laravel-doctrine::doctrine.proxy_classes.namespace'));
 
             $doctrine_config->setDefaultRepositoryClassName($config->get('laravel-doctrine::doctrine.defaultRepository'));
 
