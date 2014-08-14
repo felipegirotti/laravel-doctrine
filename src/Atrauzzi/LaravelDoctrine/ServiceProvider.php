@@ -6,7 +6,9 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\ORM\Configuration;
 
 class ServiceProvider extends Base {
 
