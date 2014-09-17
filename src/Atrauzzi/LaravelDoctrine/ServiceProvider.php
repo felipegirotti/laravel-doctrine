@@ -112,7 +112,7 @@ class ServiceProvider extends Base {
 
             $doctrine_config->setSQLLogger($config->get('laravel-doctrine::doctrine.sqlLogger'));
 
-            $doctrine_config->addCustomStringFunction('CAST', 'Atrauzzi\LaravelDoctrine\Extension\Cast');
+            $doctrine_config->addCustomStringFunction('CAST', 'Atrauzzi\LaravelDoctrine\Extension\CastFunction');
 
 			$proxy_class_namespace = $config->get('laravel-doctrine::doctrine.proxy_classes.namespace');
 			if ($proxy_class_namespace !== null) {
