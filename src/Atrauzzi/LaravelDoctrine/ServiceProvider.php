@@ -95,8 +95,13 @@ class ServiceProvider extends Base {
 
 			}
 
-			$doctrine_config = new Configuration();            
+			$doctrine_config = new Configuration();        
+
+			// caches
             $doctrine_config->setMetadataCacheImpl($cache);
+            $doctrine_config->setQueryCacheImpl($cache);
+			$doctrine_config->setResultCacheImpl($cache);
+
             AnnotationRegistry::registerFile(app_path() . '/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
             $driver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
                 new \Doctrine\Common\Annotations\AnnotationReader(),
@@ -107,6 +112,8 @@ class ServiceProvider extends Base {
             $doctrine_config->setProxyDir($config->get('laravel-doctrine::doctrine.proxy_classes.directory'));
             
             $doctrine_config->setProxyNamespace($config->get('laravel-doctrine::doctrine.proxy_classes.namespace'));
+
+            $doctrine_config->setAutoGenerateProxyClasses($config->get('laravel-doctrine::doctrine.proxy_classes.auto_generate'));
 
             $doctrine_config->setDefaultRepositoryClassName($config->get('laravel-doctrine::doctrine.defaultRepository'));
 
